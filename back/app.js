@@ -1,24 +1,13 @@
 const express = require('express'); 
-
+const mongoose = require('mongoose');
 const app = express(); 
-app.use((req, res, next)=>{
-    console.log('sisii');
-    next();
-})
 
-app.use((req, res, next) => {
-    res.status(201);
-    next();
-}); 
+mongoose.connect('mongodb+srv://AurelienGendrey:Peanut1989$@cluster0.qamdhy1.mongodb.net/?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-app.use((req, res, next) => {
-    res.json({message: 'ok'});
-    next();
-})
-
-app.use((req, res) => {
-    console.log("success");
-})
 
 module.exports = app; 
 
