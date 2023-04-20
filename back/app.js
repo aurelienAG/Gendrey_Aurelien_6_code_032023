@@ -1,17 +1,25 @@
-const express = require('express'); 
-const app = express();
+const express = require('express');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
-const bodyParser = require('body-parser');
-const userRoutes = require('./routes/user');
+const path = require('path');
+const cors = require('cors'); // Importer cors
 
+const userRoutes = require('./routes/user');
+const saucesRoutes = require('./routes/sauces.route');
+
+const app = express();
 
 mongoose.connect('mongodb+srv://AurelienGendrey:Peanut1989$@cluster0.qamdhy1.mongodb.net/?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
+  { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+app.use(bodyParser.json());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use(cors()); // Utiliser cors pour ajouter les en-têtes CORS
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,10 +28,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use('/api/auth' , userRoutes );
+app.use('/api/auth', userRoutes);
+app.use('/api/sauces', saucesRoutes); 
+ 
+module.exports = app;
 
-
-module.exports = app; 
 
