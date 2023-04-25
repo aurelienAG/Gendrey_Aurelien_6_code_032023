@@ -1,36 +1,43 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-mongoose.set('strictQuery', true);
-const path = require('path');
-const cors = require('cors'); // Importer cors
+// Importation des modules nécessaires
+const express = require('express'); // framework Node.js pour créer des applications web
+const bodyParser = require('body-parser'); // middleware pour parser les corps de requêtes HTTP
+const mongoose = require('mongoose'); // module pour interagir avec MongoDB
+mongoose.set('strictQuery', true); // utilisation des requêtes strictes
+const path = require('path'); // module pour manipuler les chemins d'accès aux fichiers
+const cors = require('cors'); // middleware pour gérer les en-têtes CORS
 
+// Importation des routes
 const userRoutes = require('./routes/user');
-const saucesRoutes = require('./routes/sauces.route');
+const saucesRoutes = require('./routes/sauces');
 
+// Initialisation de l'application Express
 const app = express();
 
+// Connexion à la base de données MongoDB
 mongoose.connect('mongodb+srv://AurelienGendrey:Peanut1989$@cluster0.qamdhy1.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-app.use(bodyParser.json());
+// Configuration des middlewares
+app.use(bodyParser.json()); // parser les corps de requêtes HTTP en JSON
+app.use(cors()); // permettre les requêtes cross-origin (CORS)
+app.use('/images', express.static(path.join(__dirname, 'images'))); // servir les images statiques
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
-app.use(cors()); // Utiliser cors pour ajouter les en-têtes CORS
-
+// Configuration des en-têtes CORS
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Origin', '*'); // autoriser toutes les origines
+  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Expose-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization'); // autoriser les en-têtes spécifiés
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'); // autoriser les méthodes HTTP spécifiées
+  // res.setHeader('Access-Control-Expose-Headers', 'Content-Type, Authorization'); // autoriser l'exposition des en-têtes spécifiés
   next();
 });
 
-app.use('/api/auth', userRoutes);
-app.use('/api/sauces', saucesRoutes); 
- 
+// Configuration des routes
+app.use('/api/auth', userRoutes); // routes liées à l'authentification des utilisateurs
+app.use('/api/sauces', saucesRoutes); // routes liées aux sauces
+
+// Exportation de l'application
 module.exports = app;
 
 
