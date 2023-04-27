@@ -3,8 +3,11 @@ const express = require('express'); // framework Node.js pour créer des applica
 const bodyParser = require('body-parser'); // middleware pour parser les corps de requêtes HTTP
 const mongoose = require('mongoose'); // module pour interagir avec MongoDB
 mongoose.set('strictQuery', true); // utilisation des requêtes strictes
+
 const path = require('path'); // module pour manipuler les chemins d'accès aux fichiers
 const cors = require('cors'); // middleware pour gérer les en-têtes CORS
+const dotenv = require("dotenv"); 
+dotenv.config();
 
 // Importation des routes
 const userRoutes = require('./routes/user');
@@ -14,7 +17,7 @@ const saucesRoutes = require('./routes/sauces');
 const app = express();
 
 // Connexion à la base de données MongoDB
-mongoose.connect('mongodb+srv://AurelienGendrey:Peanut1989$@cluster0.qamdhy1.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect(`${process.env.MONGO_URI}`,
   { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));

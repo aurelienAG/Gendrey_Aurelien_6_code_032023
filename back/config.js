@@ -9,7 +9,7 @@ dotenv.config({
 // exports pour retrouver les valeurs contenues dans fichier .env
 module.exports = {
     JWT_SECRET: process.env.JWT_SECRET,
-    MONGO_DB_URI: process.env.MONGO_DB_URI,
+    MONGO_URI: process.env.MONGO_URI,
 
     HOST: process.env.HOST || 'localhost',
     PORT: process.env.PORT || 3000,
