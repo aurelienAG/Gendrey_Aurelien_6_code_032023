@@ -46,7 +46,7 @@ exports.login = (req, res, next) => {
                     // Encode l'ID de l'utilisateur dans le token pour être sûr que la requête correspond bien à cet utilisateur
                     { userId: user._id },
                     // Clé secrète pour l'encodage du token
-                    `${config.JWT_TOKEN_SECRET}`,
+                    `${config.JWT_SECRET}`,
                     // Définit la durée de validité du token, au bout de 24h l'utilisateur doit se reconnecter
                     { expiresIn: '24h' }
                 ),
